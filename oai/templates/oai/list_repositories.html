@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Calisphere OAI feeds</h1>
+    <h2>Repositories</h2>
+    <ul>
+        {% for r in repositories %}
+            <li><a href= "{% url 'oai:oai' r.repo_id %}?verb=Identify">{{ r.name }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html> 

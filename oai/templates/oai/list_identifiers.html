@@ -1,0 +1,20 @@
+{% extends "oai/oai_base.html" %}
+
+{% block body %}
+  <request verb="ListIdentifiers" metadataPrefix="oai_dc" {% if set_id %}set="{{ set_id }}"{% endif %}>{{ base_url }}</request>
+  {% if error %}
+  <error code="noRecordsMatch">The combination of the values of the from, until, set and metadataPrefix arguments results in an empty list.</error>
+  {% else %}
+  <ListIdentifiers>
+    {% for r in records %}
+    <header>
+      <identifier>{{ r.identifier }}</identifier>
+      <datestamp>{{ r.datestamp|date:"Y-m-d\TH:i:s\Z" }}</datestamp>
+      {% for s in r.sets.all %}
+      <setSpec>{{ s.set_id }}</setSpec>
+      {% endfor %}
+    </header>
+    {% endfor %}
+  </ListIdentifiers>
+  {% endif %}
+{% endblock %}

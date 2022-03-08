@@ -1,0 +1,31 @@
+{% extends "oai/oai_base.html" %}
+
+{% block body %}
+  <request verb="ListRecords" metadataPrefix="oai_dc" {% if set_id %}set="{{ set_id }}"{% endif %}>{{ base_url }}</request>
+  {% if error %}
+  <error code="noRecordsMatch">The combination of the values of the from, until, set and metadataPrefix arguments results in an empty list.</error>
+  {% else %}
+  <ListRecords>
+    {% for r in records %}
+      <record xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+        <header>
+          <identifier>{{ r.identifier }}</identifier>
+          <datestamp>{{ r.datestamp|date:"Y-m-d\TH:i:s\Z" }}</datestamp>
+          {% for s in r.sets.all %}
+          <setSpec>{{ s.set_id }}</setSpec>
+          {% endfor %}
+        </header>
+        <metadata>
+          <oai_dc:dc>
+            {% for f in r.oaifield_set.all %}<dc:{{ f.name }}>{{ f.value }}</dc:{{ f.name }}>
+            {% endfor %}
+          </oai_dc:dc>
+      </metadata>
+    </record>
+    {% endfor %}
+    {% if resumptionToken %}
+    <resumptionToken expirationDate="{{ resumptionToken.expiration_date|date:'Y-m-d\TH:i:s\Z' }}" completeListSize="{{ total_records }}" cursor="{{ resumptionToken.cursor }}">{{ resumptionToken.key }}</resumptionToken>
+    {% endif %}
+  </ListRecords>
+  {% endif %}
+{% endblock %}

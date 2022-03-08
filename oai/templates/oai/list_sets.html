@@ -1,0 +1,13 @@
+{% extends "oai/oai_base.html" %}
+
+{% block body %}
+    <request verb="ListSets">{{ base_url }}</request>
+    <ListSets>
+        {% for set in repo.oaiset_set.all %}
+            <set>
+                <setSpec>{{ set.set_id }}</setSpec>
+                <setName>{{ set.name }}</setName>
+            </set>
+        {% endfor %}
+    </ListSets>
+{% endblock %}

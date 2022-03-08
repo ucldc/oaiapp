@@ -1,0 +1,14 @@
+{% extends "oai/oai_base.html" %}
+
+{% block body %}
+  <request verb="Identify">{{ base_url }}</request>
+  <Identify>
+    <repositoryName>{{ repo.name }}</repositoryName>
+    <baseURL>{{ base_url }}</baseURL>
+    <protocolVersion>2.0</protocolVersion>
+    <adminEmail>admin@email.edu</adminEmail>
+    <earliestDatestamp>{{ repo.get_earliest_datestamp }}</earliestDatestamp>
+    <deletedRecord>no</deletedRecord>
+    <granularity>YYYY-MM-DDThh:mm:ssZ</granularity>
+  </Identify>
+{% endblock %}

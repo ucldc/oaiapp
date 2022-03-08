@@ -1,0 +1,26 @@
+{% extends "oai/oai_base.html" %}
+
+{% block body %}
+  <request verb="GetRecord" metadataPrefix="oai_dc" identifier="{{ record.identifier }}">{{ base_url }}</request>
+  {% if error %}
+  <error code="idDoesNotExist">The value of the identifier argument is unknown or illegal in this repository.</error>
+  {% else %}
+  <GetRecord>
+    <record xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <header>
+        <identifier>{{ record.identifier }}</identifier>
+        <datestamp>{{ record.datestamp|date:"Y-m-d\TH:i:s\Z" }}</datestamp>
+        {% for s in record.sets.all %}
+        <setSpec>{{ s.set_id }}</setSpec>
+        {% endfor %}
+      </header>
+      <metadata>
+        <oai_dc:dc>
+          {% for f in record.oaifield_set.all %}<dc:{{ f.name }}>{{ f.value }}</dc:{{ f.name }}>
+          {% endfor %}
+        </oai_dc:dc>
+      </metadata>
+    </record>
+  </GetRecord>
+  {% endif %}
+{% endblock %}
