@@ -2,8 +2,10 @@
 
 {% block body %}
   <request verb="ListRecords" metadataPrefix="oai_dc" {% if set_id %}set="{{ set_id }}"{% endif %}>{{ base_url }}</request>
-  {% if error %}
+  {% if error == "noRecordsMatch" %}
   <error code="noRecordsMatch">The combination of the values of the from, until, set and metadataPrefix arguments results in an empty list.</error>
+  {% elif  error == "badResumptionToken" %}
+  <error code="badResumptionToken">The value of the resumptionToken argument is invalid or expired.</error>
   {% else %}
   <ListRecords>
     {% for r in records %}

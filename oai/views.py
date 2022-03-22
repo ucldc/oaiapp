@@ -3,6 +3,8 @@ from django.conf import settings
 
 from oai.models import *
 
+import datetime
+
 def list_repositories(request):
     return render(request, template_name="oai/list_repositories.html", 
                   context={"repositories": OAIRepository.objects.all()})
@@ -26,15 +28,22 @@ def oai(request, repo_id):
             template_name = "oai/list_identifiers.html"
 
         if "resumptionToken" in request.GET:
-            token = ResumptionToken.objects.get(key=request.GET.get("resumptionToken"))
-            cursor = token.cursor + settings.OAI_RESULTS_LIMIT
+            exp = datetime.datetime.now() - datetime.timedelta(days=2)
+            ResumptionToken.objects.filter(date_created__lt=exp).delete()
+            tkey = request.GET.get("resumptionToken")
+            if ResumptionToken.objects.filter(key=tkey).exists():
+                token = ResumptionToken.objects.get(key=tkey)
+                cursor = token.cursor + settings.OAI_RESULTS_LIMIT
+            else:
+                context.update({"error": "badResumptionToken"})
+                token = None
+                cursor = 0
         else:
             token = None
             cursor = 0
 
         set_id = token.set.set_id if token and token.set else request.GET.get("set", False)
         if set_id:
-            print(set_id)
             if OAISet.objects.filter(set_id=set_id).exists():
                 set = OAISet.objects.get(set_id=set_id)
                 records = set.oairecord_set.all().order_by('pk')
