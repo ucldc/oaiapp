@@ -18,7 +18,7 @@ class Command(BaseCommand):
         collection_id = options.get("collection_id")
         repo_id = options.get("repo_id")
 
-        solr_url = settings.SOLR_URL
+        solr_url = settings.SOLR_URL + "/query"
         solr_auth = {"X-Authentication-Token": settings.SOLR_API_KEY}
 
         collection_url = "https://registry.cdlib.org/api/v1/collection/{}/".format(collection_id)
