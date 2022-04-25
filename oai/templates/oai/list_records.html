@@ -21,6 +21,7 @@
           <oai_dc:dc>
             {% for f in r.oaifield_set.all %}<dc:{{ f.name }}>{{ f.value }}</dc:{{ f.name }}>
             {% endfor %}
+            <dc:publisher>{{ repo.name }}</dc:publisher>
           </oai_dc:dc>
       </metadata>
     </record>
