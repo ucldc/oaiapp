@@ -3,22 +3,24 @@ Django oai app to run with registry
 
 # Release steps
 ```
+# First time only
 cd code
 git clone https://github.com/ucldc/oaiapp.git
 cd avram
 ln -s ../oaiapp/oai oai
 
+# Only necessary if you made changes in the main app
 git checkout master
 git pull origin master
 
 source env.local
 source ../../python/bin/activate
-python manage.py migrate oai
-python manage.py collectstatic
+python ./manage.py migrate oai
+python ./manage.py collectstatic
 
 monit restart http
 # collection and repository are the ids in Calisphere
-python manage.py add_collection <collection_id> <repository_id>
+python ./manage.py add_collection <collection_id> <repository_id>
 ```
 
 License
