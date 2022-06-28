@@ -94,8 +94,11 @@ def map_solr_to_oai(json_item, set, record_ids):
     # add thumbnail image MM@UCLA says fields accepted:
     # dc:description, dc:identifier.thumbnail, dc:identifier, or dc:identifier.* (*=wildcard)
     if 'reference_image_md5' in json_item:
-        turl = "https://calisphere.org/crop/210x210/{}".format(json_item['reference_image_md5'])
+        turl = "https://calisphere.org/clip/500x500/{}".format(json_item['reference_image_md5'])
         OAIField.objects.get_or_create(record=record, name="identifier", value=turl)
+
+    if 'url_item' in json_item:
+        OAIField.objects.get_or_create(record=record, name="identifier", value=json_item['url_item'])
 
 def get_solr_page(url, headers, params, cursor="*"):
     params.update({"cursorMark": cursor})
