@@ -9,18 +9,29 @@ git clone https://github.com/ucldc/oaiapp.git
 cd avram
 ln -s ../oaiapp/oai oai
 
-# Only necessary if you made changes in the main app
-git checkout master
-git pull origin master
+# Checkout any code you need
 
 source env.local
 source ../../python/bin/activate
 python ./manage.py migrate oai
 python ./manage.py collectstatic
-
 monit restart http
+
+# Add new collections
+
 # collection and repository are the ids in Calisphere
+# example: https://calisphere.org/collections/65/
+# collection_id = 65, repository_id = 18
+cd code/avram
+source env.local
+source ../../python/bin/activate
 python ./manage.py add_collection <collection_id> <repository_id>
+
+# List of institution endpoints: https://registry.cdlib.org/oai/
+# each collection is a set under given institution
+# At the moment we only have collections from UCI but no changes need to be made to
+# add new institutions just add the collections as above and appropriate institution
+# endpoint will be added.
 ```
 
 License
