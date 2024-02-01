@@ -21,7 +21,7 @@ class OAIRepository(models.Model):
         return self.name
 
 class OAISet(models.Model):
-    repository = models.ForeignKey(OAIRepository)
+    repository = models.ForeignKey(OAIRepository, on_delete=models.CASCADE)
     set_id = models.CharField(max_length=25)
     name = models.CharField(max_length=255)
 
@@ -37,7 +37,7 @@ class OAIRecord(models.Model):
         return self.identifier
 
 class OAIField(models.Model):
-    record = models.ForeignKey(OAIRecord)
+    record = models.ForeignKey(OAIRecord, on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
     value = models.TextField()
 
@@ -47,7 +47,7 @@ class OAIField(models.Model):
 class ResumptionToken(models.Model):
     date_created = models.DateTimeField(auto_now=True)
     verb = models.CharField(max_length=64)
-    set = models.ForeignKey(OAISet, null=True, blank=True)
+    set = models.ForeignKey(OAISet, null=True, blank=True, on_delete=models.CASCADE)
     fro = models.DateTimeField(null=True, blank=True)
     until = models.DateTimeField(null=True, blank=True)
     cursor = models.IntegerField()
